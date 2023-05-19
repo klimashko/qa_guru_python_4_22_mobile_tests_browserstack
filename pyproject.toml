@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "qa-guru-python-4-22-mobile-tests-browserstack"
+version = "0.1.0"
+description = ""
+authors = ["evgenii klimashko <klimashko108@gmail.com>"]
+readme = "README.md"
+packages = [{include = "qa_guru_python_4_22_mobile_tests_browserstack"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+Appium-Python-Client = "^2.6.1"
+browserstack-local = "^1.2.2"
+selene = {version = "^2.0.0-beta.17", allow-prereleases = true}
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
