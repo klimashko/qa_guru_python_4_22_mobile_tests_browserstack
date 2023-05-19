@@ -1,3 +1,5 @@
+import time
+
 from appium import webdriver
 from appium.options.android import UiAutomator2Options
 from appium.webdriver.common.appiumby import AppiumBy
@@ -38,9 +40,17 @@ def test_open_searching_page():
     # Test case for the BrowserStack sample Android app.
     browser.element((AppiumBy.ACCESSIBILITY_ID, "Search Wikipedia")).click()
 
-    browser.element((AppiumBy.ID, "org.wikipedia.alpha:id/search_src_text")).type("Toledo, Spain")
+    browser.element((AppiumBy.ID, "org.wikipedia.alpha:id/search_src_text")).type("BrowserStack")
 
-    # browser.element((AppiumBy.ACCESSIBILITY_ID, "Toledo, Spain")).should(be.visible).click()
-    browser.element((AppiumBy.CLASS_NAME, "android.widget.TextView")).should(have.text("Toledo, Spain"))
+
+    elements = browser.elements((AppiumBy.ID, "org.wikipedia.alpha:id/page_list_item_title"))
+    for element in elements:
+        if element.should(have.text("BrowserStack")) and element is not browser.element((AppiumBy.ID, "org.wikipedia.alpha:id/search_src_text")):
+            element.click()
+            print(element)
+            time.sleep(3)
+            break
+
 
     browser.quit()
+# element.should(have.no.id("org.wikipedia.alpha:id/search_src_text"))
