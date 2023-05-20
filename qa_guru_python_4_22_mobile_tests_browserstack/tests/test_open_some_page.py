@@ -1,13 +1,13 @@
 import time
-
 from appium import webdriver
 from appium.options.android import UiAutomator2Options
 from appium.webdriver.common.appiumby import AppiumBy
 from selene import have, be
 from selene.support.shared import browser
-
-
-
+from appium import webdriver
+from appium.webdriver.common.appiumby import AppiumBy
+from selene import have, be
+from selene.support.shared import browser
 
 def test_open_searching_page():
     # Options are only available since client version 2.3.0
@@ -37,20 +37,32 @@ def test_open_searching_page():
     # Initialize the remote Webdriver using BrowserStack remote URL
     browser.config.driver = webdriver.Remote("http://hub.browserstack.com/wd/hub", options=options)
 
-    # Test case for the BrowserStack sample Android app.
     browser.element((AppiumBy.ACCESSIBILITY_ID, "Search Wikipedia")).click()
 
-    browser.element((AppiumBy.ID, "org.wikipedia.alpha:id/search_src_text")).type("BrowserStack")
+    browser.element((AppiumBy.ID, "org.wikipedia.alpha:id/search_src_text")).type("Toledo, Spain")
 
+    time.sleep(2)
 
-    elements = browser.elements((AppiumBy.ID, "org.wikipedia.alpha:id/page_list_item_title"))
-    for element in elements:
-        if element.should(have.text("BrowserStack")) and element is not browser.element((AppiumBy.ID, "org.wikipedia.alpha:id/search_src_text")):
-            element.click()
-            print(element)
-            time.sleep(3)
+    # search_results = browser.all((AppiumBy.CLASS_NAME, "android.widget.LinearLayout"))
+    #
+    # search_results.element_by(have.text("Toledo, Spain")).click()
+    # browser.element((AppiumBy.CLASS_NAME, "android.widget.LinearLayout")).should(have.text("Toledo, Spain")).click()
+
+    search_results = browser.all(
+        (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, 'Toledo, Spain')]"))
+
+    # Найти элемент из результатов поиска, исключив окно поиска
+
+    for result in search_results:
+        if result != browser.element((AppiumBy.ID, "org.wikipedia.alpha:id/search_src_text")):
+            result.should(have.text('Toledo, Spain')).click()
             break
+    time.sleep(3)
+    # Проверка, что открылась правильная страница
+
+    browser.element((AppiumBy.XPATH,
+                                  "//android.widget.TextView[@resource-id='org.wikipedia.alpha:id/view_page_title']")).should(have.text('Toledo'))
+
 
 
     browser.quit()
-# element.should(have.no.id("org.wikipedia.alpha:id/search_src_text"))
